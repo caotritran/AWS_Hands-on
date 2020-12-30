@@ -1,0 +1,23 @@
+Parameters:
+  Tenancy:
+    Type: "String"
+    Default: "default"
+    AllowedValues:
+      - "dedicated"
+      - "default"
+    Description: "Enter Dedicated or Default. Default is Default."
+
+Conditions:
+  VPCTenancy: !Equals [!Ref Tenancy, "default"]
+
+Resources:
+  myVPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "172.15.0.0/16"
+      EnableDnsSupport: false
+      EnableDnsHostnames: false
+      InstanceTenancy: !If [VPCTenancy, "default", "dedicated"]
+      Tags:
+        - Key: "foo"
+          Value: "bar"
